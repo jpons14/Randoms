@@ -1,0 +1,6 @@
+MAX_RECENT_WORKSPACES=10
+RECENT_WORKSPACES=/home/cicles/workspace\n/home/cicles/workspace1\n/home/cicles/android_diw/workspace1
+RECENT_WORKSPACES_PROTOCOL=3
+SHOW_RECENT_WORKSPACES=false
+SHOW_WORKSPACE_SELECTION_DIALOG=true
+eclipse.preferences.version=1
