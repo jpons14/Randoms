@@ -7,44 +7,72 @@
 <body>
 <?php
 $groups = array(
-        'A' => "Ludo Josep Neus",
-        'B' => "jaume_llopis jaume_florit xavi_reus",
-        'C' => "Jaume_pons erik joel",
-        'D' => "jesus sergi xavi_raga"
+        'A' => array("Ludo", "Josep", "Neus"),
+        'B' => array("jaume llopis", "jaume florit", "xavi_reus"),
+        'C' => array("jaume pons", "erik ", "joel"),
+        'D' => array("jesus", "sergi", "xavi raga")
 );
-$groupsInt = [
-        'A',
-        'B',
-        'C',
-        'D',
-];
 
-function randomGroups($groupsInt){
-    $numGroups = count($groupsInt);
+$activities = array(
+    "Activity 1" => "individual",
+    "Activity 2" => "individual",
+    "Activity 3" => "individual",
+    "Activity 4" => "individual",
+    "Activity 5" => "individual",
+    "Activity 6" => "individual",
+    "Activity 7" => "individual",
+    "Activity 8" => "individual",
+    "Activity 9" => "individual",
+    "Activity 10" => "individual",
+    "Activity 11" => "individual",
+);
+
+function mode1 ($groups): array{
+    shuffle($groups);
     $rand = array();
-    for($i = 0; count($rand) < $numGroups; $i++){
-        $tmp = rand(0, $numGroups - 1);
-        /*if (!in_array($tmp, array_keys($rand))){
-            $rand[] = $groupsInt[$tmp];
-        }*/
-    }
-   // return array_rand($groupsInt, 4);
-}
-function randomNames($groups, $groupsInt){
-    $result = array();
-    echo '<pre>$groups' . print_r($groups, true) . '</pre>';
     foreach ($groups as $key => $group) {
-        $foo = explode(" ", $groupsInt[$group]);
-        $rand = rand(0, count($foo) - 1);
-        $result[] = $foo[$rand];
+        shuffle($group);
+        $rand[$key] = $group[0];
     }
-    return $result;
+    return $rand;
 }
 
-//echo '<pre>randomGroups($groupsInt)' . print_r(randomGroups($groupsInt), true) . '</pre>';
-//$results = randomNames(randomGroups($groupsInt), $groups);
-//echo '<pre>$results' . print_r($results, true) . '</pre>';
-echo '<pre>array_rand($groupsInt, 4)' . print_r(array_rand($groupsInt, 4), true) . '</pre>';
+function mode2 ($groups): array{
+    $classMate = array();
+    foreach ($groups as $group) {
+        foreach ($group as $item) {
+            $classMate[] = $item;
+        }
+    }
+    shuffle($classMate);
+    return $classMate;
+}
+
+function mode3 ($groups, $activities, $type) {
+    $assigned = array();
+    $classMates = array();
+    $foo = array();
+    if ($type == "individual"){
+        $classMates = mode2($groups);
+        foreach ($activities as $index => $activity) {
+            if ($activity == "individual"){
+                $assigned[] = $index;
+            }
+        }
+        $subjects = array();
+        foreach ($activities as $key => $activity) {
+            $subjects[] =  $key;
+        }
+        $foo = array_combine($subjects, $classMates);
+        echo '<pre>$foo' . print_r($foo, true) . '</pre>';
+
+    }
+    return $foo;
+}
+
+echo '<pre>mode1($groups)' . print_r(mode1($groups), true) . '</pre>';
+echo '<pre>mode2($groups)' . print_r(mode2($groups), true) . '</pre>';
+echo '<pre>mode3($groups, $activities, "individual")' . print_r(mode3($groups, $activities, "individual"), true) . '</pre>';
 
 ?>
 </body>
