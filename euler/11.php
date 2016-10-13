@@ -1,6 +1,5 @@
 <?php
 $time_start = microtime(true);
-sleep(1);
 $enter = array(
     array(8, 2, 22, 97, 38, 15, 0, 40, 0, 75, 4, 5, 7, 78, 52, 12, 50, 77, 91, 8),
     array(49, 49, 99, 40, 17, 81, 18, 57, 60, 87, 17, 40, 98, 43, 69, 48, 4, 56, 62, 0),
@@ -36,16 +35,16 @@ class eleven
      */
     public $enter;
 
-    public function __construct( $howMany, $enter )
+    public $vertical1Array = array();
+
+    public function __construct($howMany, $enter)
     {
         $this->howMany = $howMany;
         $this->enter = $enter;
-
-        echo '<pre>$this->vertical()' . print_r($this->vertical(), true) . '</pre>';
         echo '<pre>$this->horizontal()' . print_r($this->horizontal(), true) . '</pre>';
 
     }
-    
+
     /**
      * @return int
      */
@@ -57,7 +56,7 @@ class eleven
     /**
      * @param int $howMany
      */
-    public function setHowMany( $howMany )
+    public function setHowMany($howMany)
     {
         $this->howMany = $howMany;
     }
@@ -68,25 +67,36 @@ class eleven
      */
     private function horizontal()
     {
-        $enter = $this->enter;
+        $this->allInOneArray();
+        $enter = $this->vertical1Array;
+        $tmp = array();
         $results = array();
-        for ($k = 0; $k < count($enter); $k++) {
-            for ($i = 0; $i < count($enter[$k]); $i++) {
-                $tmp = array();
-                for ($j = $i; $j < $i + 4; $j++) {
-                    $tmp[] = $enter[$k][$j];
-                }
-                $results[$k][] = array_product($tmp);
+        for ($i = 0; $i < count($enter); $i++) {
+            for ($j = $i; $j < $i + 4; $j++) {
+                $tmp[] = $enter[$j];
             }
+            $results[] = array_product($tmp);
+            $tmp = array();
         }
         return $results;
+    }
+
+    private function allInOneArray()
+    {
+        $enter = $this->enter;
+        foreach ($enter as $index => $item) {
+            foreach ($item as $index2 => $item2) {
+                $this->vertical1Array[] = $item2;
+            }
+        }
     }
 
     /**
      * The vertical product
      * @return array
      */
-    private function vertical (){
+    private function vertical()
+    {
         $enter = $this->enter;
         $results = array();
         for ($k = 0; $k < count($enter); $k++) {
@@ -102,7 +112,7 @@ class eleven
     }
 }
 
-$a = new eleven( 4, $enter );
+$a = new eleven(4, $enter);
 $time_end = microtime(true);
 $time = $time_end - $time_start;
 echo "Process Time: $time";
