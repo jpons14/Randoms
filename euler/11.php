@@ -1,5 +1,6 @@
 <?php
 $time_start = microtime(true);
+// 0 1 2 3  1 2 3 4
 $enter = array(
     array(8, 2, 22, 97, 38, 15, 0, 40, 0, 75, 4, 5, 7, 78, 52, 12, 50, 77, 91, 8),
     array(49, 49, 99, 40, 17, 81, 18, 57, 60, 87, 17, 40, 98, 43, 69, 48, 4, 56, 62, 0),
@@ -23,6 +24,7 @@ $enter = array(
     array(1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 1, 89, 19, 67, 48)
 );
 
+
 class eleven
 {
     /**
@@ -35,14 +37,27 @@ class eleven
      */
     public $enter;
 
-    public $vertical1Array = array();
+    public $horizontalArray = array();
+
+    public $verticalArray = array();
+
+    public $diagonalArray = array();
+
+    public $resultHorizontal = array();
+
+    public $resultVertical = array();
+
+    public $resultDiagonal = array();
 
     public function __construct($howMany, $enter)
     {
         $this->howMany = $howMany;
         $this->enter = $enter;
-        echo '<pre>$this->horizontal()' . print_r($this->horizontal(), true) . '</pre>';
-
+        $this->resultHorizontal = $this->horizontal();
+        unset($this->horizontalArray);
+        $this->resultVertical = $this->vertical();
+        unset($this->verticalArray);
+        $this->resultDiagonal = $this->diagonal();
     }
 
     /**
@@ -67,8 +82,8 @@ class eleven
      */
     private function horizontal()
     {
-        $this->allInOneArray();
-        $enter = $this->vertical1Array;
+        $this->allInOneArrayHorizontal();
+        $enter = $this->horizontalArray;
         $tmp = array();
         $results = array();
         for ($i = 0; $i < count($enter); $i++) {
@@ -81,38 +96,68 @@ class eleven
         return $results;
     }
 
-    private function allInOneArray()
+    private function allInOneArrayHorizontal()
     {
         $enter = $this->enter;
         foreach ($enter as $index => $item) {
             foreach ($item as $index2 => $item2) {
-                $this->vertical1Array[] = $item2;
+                $this->horizontalArray[] = $item2;
+            }
+        }
+    }
+
+    private function allInOneArrayVertical()
+    {
+        $enter = $this->enter;
+        $result = &$this->verticalArray;
+        for ($i = 0; $i < 20; $i++) {
+            for ($j = 0; $j < 20; $j++) {
+                $result[] = $enter[$j][$i];
             }
         }
     }
 
     /**
      * The vertical product
-     * @return array
      */
     private function vertical()
     {
-        $enter = $this->enter;
+        $this->allInOneArrayVertical();
+        $enter = $this->verticalArray;
+        $tmp = array();
         $results = array();
-        for ($k = 0; $k < count($enter); $k++) {
-            for ($i = 0; $i < count($enter[$k]); $i++) {
-                $tmp = array();
-                for ($j = $i; $j < $i + 4; $j++) {
-                    $tmp[] = $enter[$j][$k];
-                }
-                $results[$k][] = array_product($tmp);
+        for ($i = 0; $i < count($enter); $i++) {
+            for ($j = $i; $j < $i + 4; $j++) {
+                $tmp[] = $enter[$j];
             }
+            $results[] = array_product($tmp);
+            $tmp = array();
         }
         return $results;
+
+    }
+
+    private function diagonal()
+    {
+        $enter = $this->enter;
+        $result = array();
+        for ($i = 3; $i < 20; $i++) {
+            for ($j = 0; $j <= 16; $j++) {
+                $result[] = ($enter[$i][$j] * $enter[$i + 1][$j - 1] * $enter[$i + 2][$j - 2] * $enter[$i + 3][$j - 3]);
+            }
+        }
+        return $result;
     }
 }
 
 $a = new eleven(4, $enter);
 $time_end = microtime(true);
 $time = $time_end - $time_start;
-echo "Process Time: $time";
+echo "Process Time: $time<br />";
+
+echo 'Horizontal == ' . max($a->resultHorizontal) . '<br />';
+echo 'Vertical == ' . max($a->resultVertical) . '<br />';
+echo 'Diagonal == ' . max($a->resultDiagonal) . '<br />';
+
+echo memory_get_usage() / 1024 . '<br />';
+echo '<pre>sys_getloadavg() ' . print_r(sys_getloadavg() , true) . '</pre>';
